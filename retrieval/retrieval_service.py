@@ -3,7 +3,6 @@ import os
 from typing import List, Optional, Union
 from pathlib import Path
 from langchain_openai import OpenAIEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import EnsembleRetriever
@@ -15,24 +14,32 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class EmbeddingService:
-    """Service for handling swappable embeddings (OpenAI or Local) (Phase 3)."""
+    """Service for handling swappable embeddings (OpenAI, Google, or Local) (Phase 3)."""
     def __init__(self):
         """Initializes the embedding service based on settings."""
         if settings.EMBEDDING_TYPE == "openai":
             logger.info(f"Using OpenAI Embeddings: {settings.OPENAI_EMBEDDING_MODEL}")
             self.embeddings = OpenAIEmbeddings(model=settings.OPENAI_EMBEDDING_MODEL)
+        elif settings.EMBEDDING_TYPE == "google":
+            logger.info("Using Google Generative AI Embeddings")
+            from langchain_google_genai import GoogleGenerativeAIEmbeddings
+            self.embeddings = GoogleGenerativeAIEmbeddings(
+                model="models/embedding-001",
+                google_api_key=settings.GOOGLE_API_KEY
+            )
         else:
             logger.info(f"Using Local Embeddings: {settings.LOCAL_EMBEDDING_MODEL}")
-            # encode_kwargs ensures embeddings are standardized
+            from langchain_huggingface import HuggingFaceEmbeddings
             self.embeddings = HuggingFaceEmbeddings(
                 model_name=settings.LOCAL_EMBEDDING_MODEL,
                 model_kwargs={'device': 'cpu'},
                 encode_kwargs={'normalize_embeddings': True}
             )
     
-    def get_embeddings(self) -> Union[OpenAIEmbeddings, HuggingFaceEmbeddings]:
+    def get_embeddings(self):
         """Returns the configured embedding model."""
         return self.embeddings
+
 
 class VectorStoreService:
     """Service for managing the FAISS vector store and hybrid retrieval (Phase 3 & 4)."""
