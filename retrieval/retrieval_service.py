@@ -5,7 +5,12 @@ from pathlib import Path
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
-from langchain.retrievers import EnsembleRetriever
+try:
+    from langchain.retrievers import EnsembleRetriever
+except ImportError:
+    from langchain_community.retrievers import EnsembleRetriever # Fallback just in case
+except:
+    from langchain.retrievers.ensemble import EnsembleRetriever # Another fallback for older structure
 from langchain_core.documents import Document
 from api.core.config import settings
 
