@@ -2,7 +2,7 @@ import logging
 from typing import List, Protocol, Union, Optional
 from pathlib import Path
 from langchain_community.document_loaders import PyMuPDFLoader, WebBaseLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_core.documents import Document
 from api.core.config import settings

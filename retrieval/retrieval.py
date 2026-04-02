@@ -8,7 +8,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import EnsembleRetriever
 from langchain_core.documents import Document
-from app.core.config import settings
+from api.core.config import settings
 
 # Logger configuration
 logging.basicConfig(level=logging.INFO)

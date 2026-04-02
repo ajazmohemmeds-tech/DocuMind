@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
-from app.core.config import settings
+from api.core.config import settings
 
 # Logger configuration
 logging.basicConfig(level=logging.INFO)

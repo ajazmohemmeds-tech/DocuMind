@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from typing import List, Protocol, Union, Optional
 from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from app.core.config import settings
+from api.core.config import settings
 
 # Logger configuration
 logging.basicConfig(level=logging.INFO)
