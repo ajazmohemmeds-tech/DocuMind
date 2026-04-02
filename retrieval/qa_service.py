@@ -1,9 +1,6 @@
 import logging
-from typing import List, Dict, Any, Union
 # Lazy imports for providers handled in __init__
 from typing import List, Dict, Any, Union
-from langchain.chains import RetrievalQA
-from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
 from api.core.config import settings
 
