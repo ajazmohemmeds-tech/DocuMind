@@ -36,13 +36,12 @@ class EmbeddingService:
 
 
 class VectorStoreService:
-    """Service for managing the FAISS vector store and hybrid retrieval."""
+    """Service for managing the FAISS vector store (Phase 3)."""
     def __init__(self, index_path: Union[str, Path] = settings.FAISS_STORE_PATH):
         """Initializes the vector store service."""
         self.index_path = Path(index_path)
         self.embedding_service = EmbeddingService()
         self._vector_store: Optional[FAISS] = None
-        self._bm25_retriever: Optional[BM25Retriever] = None
 
     def _load_vector_store(self) -> Optional[FAISS]:
         """Loads the FAISS index from disk if it exists."""
@@ -71,27 +70,11 @@ class VectorStoreService:
         self._vector_store.save_local(str(self.index_path))
         logger.info(f"Persisted FAISS index with {len(documents)} new chunks.")
 
-    def get_retriever(self, search_kwargs: dict = {"k": 4}) -> EnsembleRetriever:
-        """Returns a hybrid EnsembleRetriever (Dense + Sparse)."""
+    def get_retriever(self, search_kwargs: dict = {"k": 4}):
+        """Returns a FAISS retriever (Simplified for Render)."""
         if not self._vector_store:
             self._load_vector_store()
             if not self._vector_store:
                 raise ValueError("Vector store is not initialized. Add documents first.")
 
-        # Dense retriever (FAISS)
-        faiss_retriever = self._vector_store.as_retriever(search_kwargs=search_kwargs)
-
-        # Sparse retriever (BM25)
-        # Note: In a production setting, BM25 should be reconstructed or persisted properly.
-        # Here, we'll reconstruct it from the vector store's internal documents as a simplified example.
-        all_docs = list(self._vector_store.docstore._dict.values())
-        bm25_retriever = BM25Retriever.from_documents(all_docs)
-        bm25_retriever.k = search_kwargs.get("k", 4)
-
-        # Hybrid Ensemble Retriever
-        # We assign weights: 0.5 Dense, 0.5 Sparse
-        ensemble_retriever = EnsembleRetriever(
-            retrievers=[bm25_retriever, faiss_retriever],
-            weights=[0.5, 0.5]
-        )
-        return ensemble_retriever
+        return self._vector_store.as_retriever(search_kwargs=search_kwargs)
