@@ -3,7 +3,7 @@ import axios from 'axios';
 import Sidebar from './components/Sidebar';
 import ChatPanel from './components/ChatPanel';
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 interface Message {
   role: 'user' | 'assistant';
