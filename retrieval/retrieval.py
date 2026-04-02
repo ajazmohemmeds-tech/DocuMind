@@ -3,10 +3,9 @@ import os
 from typing import List, Optional, Union
 from pathlib import Path
 from langchain_openai import OpenAIEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
-from langchain.retrievers import EnsembleRetriever
+from langchain.retrievers.ensemble import EnsembleRetriever
 from langchain_core.documents import Document
 from api.core.config import settings
 
@@ -24,15 +23,17 @@ class EmbeddingService:
         else:
             logger.info(f"Using Local Embeddings: {settings.LOCAL_EMBEDDING_MODEL}")
             # encode_kwargs ensures embeddings are standardized
+            from langchain_huggingface import HuggingFaceEmbeddings
             self.embeddings = HuggingFaceEmbeddings(
                 model_name=settings.LOCAL_EMBEDDING_MODEL,
                 model_kwargs={'device': 'cpu'},
                 encode_kwargs={'normalize_embeddings': True}
             )
     
-    def get_embeddings(self) -> Union[OpenAIEmbeddings, HuggingFaceEmbeddings]:
+    def get_embeddings(self):
         """Returns the configured embedding model."""
         return self.embeddings
+
 
 class VectorStoreService:
     """Service for managing the FAISS vector store and hybrid retrieval."""
