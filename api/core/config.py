@@ -11,13 +11,13 @@ class Settings(BaseSettings):
     MODEL_PROVIDER: str = "openai"  # 'openai', 'google', or 'anthropic'
     
     OPENAI_MODEL: str = "gpt-4o"
-    GOOGLE_MODEL: str = "gemini-2.0-flash"
+    GOOGLE_MODEL: str = "gemini-3.1-pro-preview"
     ANTHROPIC_MODEL: str = "claude-3-5-sonnet-20240620"
     
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
     
     # Embedding Configuration: 'openai' or 'local'
-    EMBEDDING_TYPE: str = "local"
+    EMBEDDING_TYPE: str = os.environ.get("EMBEDDING_TYPE", "local")
     LOCAL_EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
     
     # Data storage settings
