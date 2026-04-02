@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
+import Hero from './components/Hero';
 import Sidebar from './components/Sidebar';
 import ChatPanel from './components/ChatPanel';
 
@@ -17,6 +18,7 @@ interface Source {
 }
 
 function App() {
+  const [view, setView] = useState<'landing' | 'workspace'>('landing');
   const [messages, setMessages] = useState<Message[]>([]);
   const [sources, setSources] = useState<Source[]>([]);
   const [isIngesting, setIsIngesting] = useState(false);
@@ -88,6 +90,10 @@ function App() {
       setIsQuerying(false);
     }
   };
+
+  if (view === 'landing') {
+    return <Hero onLaunch={() => setView('workspace')} />;
+  }
 
   return (
     <div className="flex h-screen bg-saas-bg p-4 overflow-hidden font-inter text-saas-primary">
