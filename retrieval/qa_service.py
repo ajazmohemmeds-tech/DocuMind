@@ -1,12 +1,12 @@
 import logging
 from typing import List, Dict, Any, Union
-from langchain_openai import ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_anthropic import ChatAnthropic
+# Lazy imports for providers handled in __init__
+from typing import List, Dict, Any, Union
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
 from api.core.config import settings
+
 
 # Logger configuration
 logging.basicConfig(level=logging.INFO)
@@ -24,6 +24,7 @@ class ResearchService:
                 if not settings.GOOGLE_API_KEY or "your_" in settings.GOOGLE_API_KEY:
                     logger.warning("GOOGLE_API_KEY is placeholder or missing.")
                 else:
+                    from langchain_google_genai import ChatGoogleGenerativeAI
                     self.model = ChatGoogleGenerativeAI(
                         model=settings.GOOGLE_MODEL,
                         google_api_key=settings.GOOGLE_API_KEY,
@@ -34,6 +35,7 @@ class ResearchService:
                 if not settings.ANTHROPIC_API_KEY or "your_" in settings.ANTHROPIC_API_KEY:
                     logger.warning("ANTHROPIC_API_KEY is placeholder or missing.")
                 else:
+                    from langchain_anthropic import ChatAnthropic
                     self.model = ChatAnthropic(
                         model=settings.ANTHROPIC_MODEL,
                         anthropic_api_key=settings.ANTHROPIC_API_KEY,
@@ -44,6 +46,7 @@ class ResearchService:
                 if not settings.OPENAI_API_KEY or "your_" in settings.OPENAI_API_KEY:
                     logger.warning("OPENAI_API_KEY is placeholder or missing.")
                 else:
+                    from langchain_openai import ChatOpenAI
                     self.model = ChatOpenAI(
                         model=settings.OPENAI_MODEL,
                         openai_api_key=settings.OPENAI_API_KEY,
@@ -56,6 +59,7 @@ class ResearchService:
         except Exception as e:
             logger.error(f"Failed to initialize {self.provider} model: {e}")
             self.model = None
+
         
         # Define a custom prompt to force source citation
         self.prompt_template = PromptTemplate(

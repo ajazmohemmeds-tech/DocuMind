@@ -1,6 +1,7 @@
 langchain>=0.2.0
 langchain-openai
 langchain-google-genai
+langchain-anthropic
 langchain-community
 langchain-experimental
 faiss-cpu
